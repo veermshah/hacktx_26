@@ -1,3 +1,34 @@
+# Destina
+
+**Meta track, 3rd place at HackTX 2026.**
+
+Destina is an AI party game for a table of friends. Tina, a tabletop robot, listens to the room and suggests challenges built around what the group has in common and around whoever has been quiet. A Game Master in an Apple Vision Pro approves each pick. Players join from their phones by scanning Tina's QR code, and they open challenges by tapping NFC "relic" chips. Scores, player badges and keepsakes live on Solana devnet.
+
+This is a fork of [Dhivyeshp/hacktx_26](https://github.com/Dhivyeshp/hacktx_26). The original project README starts [below](#destina-with-tina).
+
+## Team
+
+- **Elijah Walker** ([@elijahtwalker](https://github.com/elijahtwalker)): Destina web app, player onboarding, Meta AI (Muse Spark) pipeline, TigerDB storage
+- **Arnav Vedula** ([@axv2655](https://github.com/axv2655)): Vision Pro Game Master app
+- **Dhivyesh Prithiviraj** ([@Dhivyeshp](https://github.com/Dhivyeshp)): robot motion controls, Vision Pro live feed and motor client
+- **Veer Shah** ([@veermshah](https://github.com/veermshah)): Solana program, badge firmware and NFC tooling, websocket relay
+
+## My part (Veer)
+
+- **Solana program** ([`solana/`](solana/)). This is the `centerpiece` Anchor program on Token-2022, deployed to devnet as [`DqqLyrxUPAiJ2m3Fu4uLL6GirTH2cSXXS9wJHmGngaZX`](https://explorer.solana.com/address/DqqLyrxUPAiJ2m3Fu4uLL6GirTH2cSXXS9wJHmGngaZX?cluster=devnet).
+  - TABLE coin, with the program as mint authority and permanent delegate.
+  - Soulbound player badges whose level, XP and achievements are rewritten on chain.
+  - Round attestations, with capped and double-pay-proof awards.
+  - A shared table goal, kudos between players, an item shop that burns coin, and 1-of-1 keepsake NFTs.
+  - A chain service on Render plus a browser SDK and REST API ([`solana/FRONTEND.md`](solana/FRONTEND.md)) for the web app.
+- **Badge firmware** ([`firmware/badge-face/`](firmware/badge-face/)). It turns the ESP32-C3 Hack the North badge into Tina's animated face. The face cycles through expressions, and a button shows the join QR code. The firmware also reads and writes NFC relic tags over serial JSON. It refuses to write when more than one tag is in the field, can target a tag by UID, and can batch-program a numbered set of tags.
+- **Raspberry Pi tooling.** A Pi client and test scripts that drive the badge's screen and NFC from the relay.
+- **Websocket relay** ([`relay/`](relay/)). It connects the Pi, the Vision Pro and the game hub.
+
+**Branch work.** My PRs: [#1 Solana program and relay](https://github.com/Dhivyeshp/hacktx_26/pull/1), [#2 badge-face firmware and Pi tooling](https://github.com/Dhivyeshp/hacktx_26/pull/2), [#3 NFC multi-tag](https://github.com/Dhivyeshp/hacktx_26/pull/3), [#4 Solana v2](https://github.com/Dhivyeshp/hacktx_26/pull/4), [#5 badge join QR](https://github.com/Dhivyeshp/hacktx_26/pull/5), [#6](https://github.com/Dhivyeshp/hacktx_26/pull/6) and [#7](https://github.com/Dhivyeshp/hacktx_26/pull/7) chain fixes. Later work that isn't merged is on the [`badge-join-url`](https://github.com/Dhivyeshp/hacktx_26/tree/badge-join-url) branch: standalone badge mode and the [architecture diagram](https://github.com/Dhivyeshp/hacktx_26/blob/badge-join-url/docs/images/architecture.png).
+
+---
+
 # Destina with Tina
 
 Destina is a responsive player companion for Tina with an arcane tabletop aesthetic. The web app handles room onboarding, profile ingestion, interest review, AI processing, and relic prompt reveals. **The Vision Pro app owns all Game Master interaction.** There are no browser Game Master controls, scoring, timers, relic claims, or simulated delivery.
